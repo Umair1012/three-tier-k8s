@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: misacademy/backend:v3
+        image: misacademy/backend:v5
         ports:
         - containerPort: 5000
         resources:
@@ -50,9 +50,3 @@ spec:
             secretKeyRef:
               name: mongo-secret
               key: MONGO_URI
-        - name: BACKEND_DB
-          valueFrom:
-            configMapKeyRef:
-              name: backend-config
-              key: REACT_APP_API_BASE_URL
-

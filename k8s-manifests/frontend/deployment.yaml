@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: misacademy/frontend:v3
+        image: misacademy/frontend:v5
         ports:
         - containerPort: 3000
         resources:

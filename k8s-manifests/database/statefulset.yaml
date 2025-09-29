@@ -5,7 +5,7 @@ metadata:
   name: mongo
   namespace: database
 spec:
-  serviceName: mongo-service       # Headless service for DNS
+  serviceName: mongo-service
   replicas: 1
   selector:
     matchLabels:
@@ -16,35 +16,28 @@ spec:
         app: mongo
     spec:
       containers:
-        - name: mongo
-          image: mongo:6
-          command: ["mongod"]
-          args: ["--replSet", "rs0", "--bind_ip_all"]
-          ports:
-            - containerPort: 27017
-              protocol: TCP
-          env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_INITDB_ROOT_USERNAME
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: MONGO_INITDB_ROOT_PASSWORD
-          volumeMounts:
-            - name: mongo-storage
-              mountPath: /data/db
-  volumeClaimTemplates:
-    - metadata:
-        name: mongo-storage
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
-        # Uncomment and set storageClassName if needed
-        # storageClassName: standard
+      - name: mongo
+        image: mongo:6
+        command: ["mongod"]
+        args: ["--replSet", "rs0", "--bind_ip_all"]
+        ports:
+        - containerPort: 27017
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: MONGO_INITDB_ROOT_USERNAME
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: MONGO_INITDB_ROOT_PASSWORD
+        volumeMounts:
+        - name: mongo-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-storage
+        persistentVolumeClaim:
+          claimName: mongo-pvc
 
